@@ -7,6 +7,8 @@ WORKING_HOUR=8;
 MAX_WORKING_HOUR=40;
 MAX_WORKING_DAY=20;
 
+declare -A dailyWage;
+
 function getWorkingHour() {
 
 	case $1 in
@@ -42,7 +44,7 @@ do
 	fi
 
 	empHr=$(getWorkingHour $isPresent);
-	dailyWage[$day]=$(( empHr * WAGE_PER_HOUR ));
+	dailyWage["Day"$((day+1))]=$(( empHr * WAGE_PER_HOUR ));
 	totalWorkingHour=$((totalWorkingHour + empHr));
 	((day++));
 done
@@ -52,8 +54,16 @@ echo "Total salary of month : $"$totalSalary "USD";
 echo "Total Working day : $day";
 
 echo "Daily wage : "${dailyWage[@]};
+echo "Keys :" ${!dailyWage[@]};
 
 for ((i=0;i<${#dailyWage[@]};i++))
 do
-	echo "Day $i : $"${dailyWage[i]} "USD";
+	echo "Day$((i+1)) : $"${dailyWage["Day"$((i+1))]} "USD";
+done
+
+echo "--------------------------------------"
+
+for days in ${!dailyWage[@]}
+do
+	echo "$days :  $"${dailyWage[$days]} "USD"
 done
